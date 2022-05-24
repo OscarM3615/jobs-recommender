@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import linear_kernel
 
 data_dir = 'data/'
 
-st.set_page_config(page_title='Job Recommender System', layout='wide')
+st.set_page_config(page_title='Job Recommender System')
 
 tfdif = TfidfVectorizer(stop_words='english')
 
@@ -62,14 +62,15 @@ if search_input != '':
     with st.container():
         for index, result in results.iterrows():
             with st.expander(result['Title']):
-                st.markdown('**Location**')
-                st.write(result['Location'])
+                st.write('**Location:** ' + result['Location'])
+                st.write('**Estado:** ' + result['Estado'])
+                st.write('**Company:** ' + result['Company'])
 
-                st.markdown('**Estado**')
-                st.write(result['Estado'])
-
-                st.markdown('**Company**')
-                st.write(result['Company'])
-
-                st.markdown('**Salary**')
+                st.write('**Salary**')
                 st.write(result['Salary'])
+
+                st.markdown('**Description**')
+                st.write(result['Full Description'])
+
+                test_link = 'https://google.com/' # remove when dataset includes url
+                st.write(f'**Link:** [{test_link}]({test_link})')
