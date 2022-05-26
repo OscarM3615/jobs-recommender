@@ -14,7 +14,7 @@ tfdif = TfidfVectorizer(stop_words='english')
 
 def recommend_jobs(search: str, item_count: int = 30) -> pd.DataFrame:
     jobs_list = pd.concat(
-        [pd.Series([search]), data['Full Description']],
+        [pd.Series([search]), data['Description']],
         ignore_index=True
     )
     description_matrix = tfdif.fit_transform(jobs_list)
@@ -39,6 +39,8 @@ def load_data() -> pd.DataFrame:
     )
 
     df['Description'] = df['Description'].fillna('')
+
+    df.drop('Accessed_Date', inplace=True, axis=1)
 
     return df
 
@@ -70,7 +72,6 @@ if search_input != '':
                 st.write(result['Salary'])
 
                 st.markdown('**Description**')
-                st.write(result['Full Description'])
+                st.write(result['Description'])
 
-                test_link = 'https://google.com/' # remove when dataset includes url
-                st.write(f'**Link:** [{test_link}]({test_link})')
+                st.write(f'**Link:** [{result["Link"]}]({result["Link"]})')
