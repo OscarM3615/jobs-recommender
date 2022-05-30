@@ -4,12 +4,22 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from neo4j import GraphDatabase
 
 data_dir = 'data/'
 
 st.set_page_config(page_title='Job Recommender System')
 
 tfdif = TfidfVectorizer(stop_words='english')
+
+
+class GraphApp:
+    def __init__(self):
+        auth = (st.secrets['DB_USER'], st.secrets['DB_PASSWORD'])
+        self.driver = GraphDatabase(st.secrets['DB_HOST'], auth=auth)
+
+    def close(self):
+        self.driver.close()
 
 
 def recommend_jobs(search: str, item_count: int = 30) -> pd.DataFrame:
@@ -23,7 +33,8 @@ def recommend_jobs(search: str, item_count: int = 30) -> pd.DataFrame:
     job_index = 0
 
     similarity_score = list(enumerate(similarity_matrix[job_index]))
-    similarity_score = sorted(similarity_score, key=lambda x: x[1], reverse=True)
+    similarity_score = sorted(
+        similarity_score, key=lambda x: x[1], reverse=True)
     similarity_score = similarity_score[1:item_count + 1]
 
     job_indices = [i[0] for i in similarity_score]
